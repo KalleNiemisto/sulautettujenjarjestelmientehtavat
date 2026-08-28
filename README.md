@@ -1,0 +1,2 @@
+# sulautettujenjarjestelmientehtavat
+Sulautetun järjestelmän ohjelmoinnin kurssitehtävät
