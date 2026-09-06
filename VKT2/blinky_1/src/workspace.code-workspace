@@ -1,0 +1,8 @@
+{
+	"folders": [],
+	"settings": {
+		"nrf-connect.applications": [
+			"${workspaceFolder}\\VKT2\\blinky_1"
+		]
+	}
+}
