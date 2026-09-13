@@ -1,0 +1,9 @@
+{
+    "nrf-connect.applications": [
+        "${workspaceFolder}\\VKT2\\blinky_1",
+        "${workspaceFolder}\\VKT3\\blinky_1"
+    ],
+    "nrf-connect.debugging.bindings": {
+        "${workspaceFolder}/VKT3/blinky_1/build": "Launch blinky_1/build"
+    }
+}

@@ -1,0 +1,12 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "nrf-connect",
+			"request": "launch",
+			"name": "Launch blinky_1/build",
+			"config": "${workspaceFolder}/VKT3/blinky_1/build",
+			"runToEntryPoint": "main"
+		}
+	]
+}
