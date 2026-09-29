@@ -5,6 +5,7 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/uart.h>
+#include <zephyr/timing/timing.h>
 
 #define STACKSIZE 1024
 #define PRIORITY 5
@@ -44,7 +45,24 @@ K_THREAD_DEFINE(yellow_led_thread, STACKSIZE, yellow_led_task, NULL, NULL, NULL,
 // Main program
 int main(void)
 {
+	timing_init();
+
+	timing_start();
+	timing_t start_time = timing_counter_get();
+
 	init_led();
+
+	k_msleep(100);
+	printk("Blinky_1 käynnistetty\n");
+
+	timing_t end_time = timing_counter_get();
+	timing_stop();
+	uint64_t elapsed_time = timing_cycles_get(&start_time, &end_time);
+	printk("Aika: %llu syklia\n", elapsed_time);
+
+	while (true) {
+		k_msleep(100);
+	}
 	return 0;
 }
 
@@ -126,28 +144,44 @@ void dispatcher_task(void*,void*,void*) {
 void red_led_task(void *, void *, void*) {
 	
 	while(1) {
-
+		
 		k_sem_take(&sem_red, K_FOREVER);
+
+		timing_start();
+		timing_t start_time = timing_counter_get();
 
 		gpio_pin_set_dt(&red, 1);
 		k_sleep(K_SECONDS(1));
 		gpio_pin_set_dt(&red, 0);
 
 		k_sem_give(&release_sem);
+	
+		timing_t end_time = timing_counter_get();
+		timing_stop();
+		uint64_t elapsed_time = timing_cycles_get(&start_time, &end_time);
+		printk("Red LED task execution time: %llu cycles\n", elapsed_time);
 	}
 }
 
 void green_led_task(void *, void *, void*) {
 	
 	while(1) {
-
+		
 		k_sem_take(&sem_green, K_FOREVER);
+
+		timing_start();
+		timing_t start_time = timing_counter_get();
 
 		gpio_pin_set_dt(&green, 1);
 		k_sleep(K_SECONDS(1));
 		gpio_pin_set_dt(&green, 0);
 
 		k_sem_give(&release_sem);
+
+		timing_t end_time = timing_counter_get();
+		timing_stop();
+		uint64_t elapsed_time = timing_cycles_get(&start_time, &end_time);
+		printk("Green LED task execution time: %llu cycles\n", elapsed_time);
 	}
 }
 
@@ -157,6 +191,9 @@ void yellow_led_task(void *, void *, void*) {
 
 		k_sem_take(&sem_yellow, K_FOREVER);
 
+		timing_start();
+		timing_t start_time = timing_counter_get();
+
 		gpio_pin_set_dt(&green, 1);
 		gpio_pin_set_dt(&red, 1);
 		k_sleep(K_SECONDS(1));
@@ -164,6 +201,11 @@ void yellow_led_task(void *, void *, void*) {
 		gpio_pin_set_dt(&red, 0);
 
 		k_sem_give(&release_sem);
+
+		timing_t end_time = timing_counter_get();
+		timing_stop();
+		uint64_t elapsed_time = timing_cycles_get(&start_time, &end_time);
+		printk("Yellow LED task execution time: %llu cycles\n", elapsed_time);
 	}
 }
 
